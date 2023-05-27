@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script>
+
+
+
+        function firstTolast(){
+            var broj=document.getElementById("broj").value
+            if (broj.length<10 || broj.length>10){
+                alert("Vnesovte nevaliden broj")
+                return
+            }
+
+
+            broj=parseInt(broj)
+            if (isNaN(broj)) {
+                alert("Vnesovte nevaliden broj")
+                return
+            }
+
+            broj=String(broj)
+            var prvaCifra=broj.charAt(0)
+            var nov=broj.slice(1,10)+prvaCifra
+            document.getElementById("broj").value=nov
+            console.log(nov)
+
+        }
+
+        function lastTofirst(){
+            var broj=document.getElementById("broj").value
+            if (broj.length<10 || broj.length>10){
+                alert("Vnesovte nevaliden broj")
+                return
+            }
+
+
+            broj=parseInt(broj)
+            if (isNaN(broj)) {
+                alert("Vnesovte nevaliden broj")
+                return
+            }
+
+            broj=String(broj)
+            var posledna=broj.charAt(9)
+            var nov=posledna+broj.slice(0,9)
+            document.getElementById("broj").value=nov
+
+        }
+
+
+        function flip(){
+            var broj=document.getElementById("broj").value
+            if (broj.length<10 || broj.length>10){
+                alert("Vnesovte nevaliden broj")
+                return
+            }
+
+
+            broj=parseInt(broj)
+            if (isNaN(broj)) {
+                alert("Vnesovte nevaliden broj")
+                return
+            }
+
+            broj=String(broj)
+            indeks=0;
+            const niza=[]
+            for (var i=broj.length-1; i>=0; i--){
+                niza[indeks]=broj.charAt(i)
+                indeks++
+            }
+            broj=niza.join('')
+            console.log(broj)
+            document.getElementById("broj").value=broj
+        }
+
+        function store(){
+            var broj=document.getElementById("broj").value
+            if (broj.length<10 || broj.length>10){
+                alert("Vnesovte nevaliden broj")
+                return
+            }
+
+
+            broj=parseInt(broj)
+            if (isNaN(broj)) {
+                alert("Vnesovte nevaliden broj")
+                return
+            }
+
+            broj=String(broj)
+
+            var ul=document.getElementById("list")
+            ul.innerHTML+="<li>"+broj+"</li>"
+        }
+
+
+        function check(){
+            var broj=document.getElementById("broj").value
+            if (broj.length<10 || broj.length>10){
+                alert("Vnesovte nevaliden broj")
+                return
+            }
+
+
+            broj=parseInt(broj)
+            if (isNaN(broj)) {
+                alert("Vnesovte nevaliden broj")
+                return
+            }
+
+            broj=String(broj)
+            var brojac=0
+            for (var i=0; i<broj.length; i++){
+                if (parseInt(broj.charAt(i))%2 ===0)
+                    brojac++
+            }
+            if (brojac>=3)
+                alert("Brojot ima dovolen broj na parni cifri")
+            else
+                alert("Brojot nema dovolen broj na parni cifri")
+        }
+
+
+    </script>
+
+</head>
+<body>
+
+<input type="text" id="broj">
+<button onclick="firstTolast()"><</button>
+<button onclick="lastTofirst()">></button>
+<button onclick="flip()">FLIP</button>
+<button onclick="store()">STORE</button>
+<button onclick="check()">CHECK</button>
+
+<div>
+    <ul id="list">
+
+    </ul>
+</div>
+
+
+</body>
+</html>
