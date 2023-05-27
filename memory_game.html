@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet"
+          href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <script>
+
+        let startingURLs=["https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Flh6.googleusercontent.com%2Fproxy%2F1QI4JQ0ULIWYYXEnipfEMQt8p7j7Mn_i7MXGeuwpANApIavrG9ONQyEZ_7MvScsL_GXha9f8laD-qdEzaMuQl6we8TpFYBPSJZRAvicAwAJfa0uWf5m8KDLdNsj2iK0fBlYpZ_e-elysS3nBQAmTlfPcPYItxFfUZ7-agf1W6GCKIplCvoAGlk6ioqWY--LKaBqLgMcw1njCgORWx7jJn8EL5msmWmZnAQl5MwcTzHQUn12-iXltZ4Q_sCEpoJxdX922ahA%3Dw1200-h630-p-k-no-nu&f=1&nofb=1",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.kaytetytkannettavat.fi%2Fwp-content%2Fuploads%2Fthinkpad-x250-500x500.png&f=1&nofb=1",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2F736x%2Fd9%2Fe2%2Ff2%2Fd9e2f25dd00ffba38ebeb2ec05c49416--small-appliances-laptop.jpg&f=1&nofb=1",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Falphacom-bg.com%2Fuserfiles%2Fproductimages%2Fproduct_6483.jpg&f=1&nofb=1",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fphucanhcdn.com%2Fmedia%2Fproduct%2F34176_dell_xps_13_9370_70170107.jpg&f=1&nofb=1",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpaintingvalley.com%2Fdrawings%2Fapple-outline-drawing-27.jpg&f=1&nofb=1",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpc.vergelijk.nl%2F500x500%2F132982721.jpg&f=1&nofb=1",
+            "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.notebookcheck.org%2Fuploads%2Ftx_nbc2%2FvjMIj8XnjgGyRiIc_500.jpg&f=1&nofb=1"]
+        let imgURLs=[]
+        let coverURL="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.giphy.com%2Fmedia%2F3f7uyo3FXXSjm%2Fgiphy.gif&f=1&nofb=1"
+        let lastClicked=[NaN,NaN]
+        let imgIndexes=[]
+        let keepOpen=[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]
+
+        function loadImages(){
+            for(let i=0;i<8;i++){
+                let tmpImg=new Image()
+                tmpImg.onload=function (){
+                    imgURLs[i]=this.src
+                }
+                tmpImg.src=startingURLs[i]
+            }
+        }
+
+        function populateTable(imgIndexes){
+            for(let i=0;i<16;i++){
+                let field=$("#"+String(i)).children()[0]
+                field.width=Math.min(window.outerWidth,window.outerHeight)/7
+                if(lastClicked[0]===i || lastClicked[1]===i || keepOpen[i]===true)
+                    field.src=imgURLs[imgIndexes[i]]
+                else
+                    field.src=coverURL
+            }
+        }
+
+        function allSelected(){
+            for(let i=0;i<16;i++){
+                if(!keepOpen[i])
+                    return false
+            }
+            return true
+        }
+
+        function resetGame(){
+            lastClicked=[NaN,NaN]
+            keepOpen=[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]
+            imgIndexes=[0,1,2,3,4,5,6,7,0,1,2,3,4,5,6,7].sort(function (a,b){return 0.5-Math.random()})
+            populateTable(imgIndexes)
+            console.log(imgIndexes)
+            return imgIndexes
+        }
+
+        $(document).ready(function (){
+            loadImages()
+            imgIndexes=[0,1,2,3,4,5,6,7,0,1,2,3,4,5,6,7].sort(function (a,b){return 0.5-Math.random()})
+            console.log(imgIndexes)
+            populateTable(imgIndexes)
+            $('img').click(function (e){
+                if(!keepOpen[e.currentTarget.offsetParent.id] && lastClicked[0]!==e.currentTarget.offsetParent.id && lastClicked[1]!==e.currentTarget.offsetParent.id) {
+                    lastClicked.shift()
+                    lastClicked[1] = parseInt(e.currentTarget.offsetParent.id)
+                    if (imgIndexes[lastClicked[0]] === imgIndexes[lastClicked[1]] && lastClicked[0]!==lastClicked[1]) {
+                        keepOpen[lastClicked[0]] = true
+                        keepOpen[lastClicked[1]] = true
+                        lastClicked[0] = NaN
+                        lastClicked[1] = NaN
+                    }
+                    console.log(lastClicked)
+                    populateTable(imgIndexes)
+
+                    setTimeout(function () {
+                        if (allSelected()) {
+                            alert("Честитки!")
+                            resetGame()
+                        }
+                    }, 100)
+                }
+            })
+
+            $(window).resize(function() {
+                console.log("Width: "+window.outerWidth+" | Height: "+window.outerHeight)
+                for(let i=0;i<16;i++){
+                    let field=$("#"+String(i)).children()[0]
+                    field.width=Math.min(window.outerWidth,window.outerHeight)/7
+                }
+            });
+
+            $('input').click(function (){
+                resetGame()
+            })
+        })
+    </script>
+</head>
+<body>
+<h1>Meморија</h1>
+<div style="text-align:left; float:left">
+    <table border="1">
+        <tr>
+            <td id="0"><img src=""/></td>
+            <td id="1"><img src=""/></td>
+            <td id="2"><img src=""/></td>
+            <td id="3"><img src=""/></td>
+        </tr>
+        <tr>
+            <td id="4"><img src=""/></td>
+            <td id="5"><img src=""/></td>
+            <td id="6"><img src=""/></td>
+            <td id="7"><img src=""/></td>
+        </tr>
+        <tr>
+            <td id="8"><img src=""/></td>
+            <td id="9"><img src=""/></td>
+            <td id="10"><img src=""/></td>
+            <td id="11"><img src=""/></td>
+        </tr>
+        <tr>
+            <td id="12"><img src=""/></td>
+            <td id="13"><img src=""/></td>
+            <td id="14"><img src=""/></td>
+            <td id="15"><img src=""/></td>
+        </tr>
+    </table>
+    <input type="submit" value="RESET"/>
+</div>
+<br/>
+</body>
